@@ -50,6 +50,7 @@ void initialize_input_structure(input_data_t * user_input_data)
 	
 }
 
+#include <ctype.h>
 /*
  * En este caso el input no puede contener un parametro ya que todos son opciones permite las siguientes entradas de input
  * 
@@ -72,29 +73,45 @@ void initialize_input_structure(input_data_t * user_input_data)
  * que trabaja con punteros para error de conversion, pero no resulto ya que generaba ciertos segmentacion faults y no tenia
  * documentacion muy clara)
  */
-
-int get_input_callback(char *key, char *value, void *userData)
+  
+int get_input_callback(const char *key_orig,const char *value_orig, void *userData)
 {
 	int status=CALLBCK_SUCCESS;
 	double num_input;//guardaremos el valor 
+	char * key = NULL , *value = NULL;
 	
-	if(key){//Opcional para hacer mas entendible los casos errores
-		printf("Input recieved %s %s\n",key,value);
+	if(key_orig)
+	{
+		key = malloc(strlen(key_orig) +  1 ); // No hay una funcion standard portable que permita hacer un strcmpy incase sensitive
+		strcpy(key,key_orig); 
+		for(int i = 0; key[i]; i++) //Convert key to lower case and compare against lower case version 
+			key[i] = tolower(key[i]);
+	}
+	if(value_orig)
+	{
+		value = malloc(strlen(value_orig) + 1 );//Must take into account '\0'
+		strcpy(value,value_orig); 
+		for(int i = 0; value[i]; i++) //Convert key to lower case and compare against lower case version 
+			value[i] = tolower(value[i]);
 	}
 	
-	if(!key){//De pasarse un parametro seteamos un error, esto es opcional y se podria desactivar 
+	if(key_orig)//Opcional para hacer mas entendible los casos errores
+		printf("Input recieved %s %s\n",key,value);
+	
+	
+	if(!key_orig){//De pasarse un parametro seteamos un error, esto es opcional y se podria desactivar 
 		status=CALLBCK_ERROR;
 		fprintf(stderr,"Why would you pass a Parameter?? Check your input('%s') \n",value);
 	}
-	else if( !strcmp("Type",key) || !strcmp("type",key))
+	else if( !strcmp("type",key))
 	{
-		if(!strcmp("YE",value) || !strcmp("ye",value ) )
+		if( !strcmp("ye",value ) )
 			((input_data_t *)userData)->type=YE;
 		
-		else if(!strcmp("UNIFORME",value) || !strcmp("uniforme",value ) )
+		else if(!strcmp("uniforme",value ) )
 			((input_data_t *)userData)->type=UNIFORME;
 		
-		else if(!strcmp("PITAGORAS",value) || !strcmp("pitagoras",value ) )
+		else if( !strcmp("pitagoras",value ) )
 			((input_data_t *)userData)->type=PITAGORAS;
 		
 		else
@@ -104,7 +121,7 @@ int get_input_callback(char *key, char *value, void *userData)
 		}
 			
 	}
-	else if( !strcmp("lStart",key) || !strcmp("lstart",key)   )
+	else if( !strcmp("lstart",key)   )
 	{
 		num_input=atof(value);
 		if(num_input==0.0)//se puede ya que ambos son double
@@ -112,12 +129,12 @@ int get_input_callback(char *key, char *value, void *userData)
 			fprintf(stderr,"Invalid input for lstart not a number or 0.0\n");
 			status=CALLBCK_ERROR;
 		}
-		
 		else	
 			((input_data_t *)userData)->lstart=num_input;
+		
 	}
 	
-	else if( !strcmp("lEnd",key) || !strcmp("lend",key)   )
+	else if(  !strcmp("lend",key)   )
 	{
 		num_input=atof(value);
 		if(num_input==0.0)//se puede ya que ambos son double
@@ -125,11 +142,11 @@ int get_input_callback(char *key, char *value, void *userData)
 			fprintf(stderr,"Invalid input for lend not a number or 0.0\n");
 			status=CALLBCK_ERROR;
 		}
-			
 		else
 			((input_data_t *)userData)->lend=num_input;
+		
 	}
-	else if( !strcmp("lConstant",key) || !strcmp("lconstant",key)   )
+	else if( !strcmp("lconstant",key)   )
 	{
 		num_input=atof(value);
 		if(num_input==0.0)//se puede ya que ambos son double
@@ -137,15 +154,15 @@ int get_input_callback(char *key, char *value, void *userData)
 			fprintf(stderr,"Invalid input for lconstant not a number or 0.0\n");
 			status=CALLBCK_ERROR;
 		}
-
-		else{
+		else
+		{
 			((input_data_t *)userData)->lconstant=num_input;
 			((input_data_t *)userData)->lconstantFlag=IN_USE;
-			
 		}
+		
 	}
 	
-	else if( !strcmp("leftAngle",key) || !strcmp("leftangle",key)   )
+	else if(  !strcmp("leftangle",key)   )
 	{
 		num_input=atof(value);
 		if(num_input==0.0)//se puede ya que ambos son double
@@ -153,31 +170,31 @@ int get_input_callback(char *key, char *value, void *userData)
 			fprintf(stderr,"Invalid input for leftangle not a number or 0.0\n");
 			status=CALLBCK_ERROR;
 		}
-			
 		else
 		{
 			((input_data_t *)userData)->leftangle=num_input;
 			((input_data_t *)userData)->leftangleFlag=IN_USE;
 		}
+		
 	}
 	
-	else if( !strcmp("rightAngle",key) || !strcmp("rightangle",key)   )
+	else if( !strcmp("rightangle",key) )
 	{
 		num_input=atof(value);
 		if(num_input==0.0)//se puede ya que ambos son double
 		{
 			fprintf(stderr,"Invalid input not for rightangle not a number or 0.0\n");
 			status=CALLBCK_ERROR;
-		}
-			
+		}	
 		else
 		{
 			((input_data_t *)userData)->rightangle=num_input;
 			((input_data_t *)userData)->rightangleFlag=IN_USE;
-			
 		}
+		
 	}
-	else if( !strcmp("xcord",key) || !strcmp("xCord",key)   )	
+	
+	else if( !strcmp("xcord",key) )	
 	{
 		num_input=atof(value);
 		if(num_input==0.0)//se puede ya que ambos son double
@@ -185,12 +202,12 @@ int get_input_callback(char *key, char *value, void *userData)
 			fprintf(stderr,"Invalid input for xcord not a number or 0.0\n");
 			status=CALLBCK_ERROR;
 		}
-			
 		else
 			((input_data_t *)userData)->drawStart.xcord=num_input;
 		
 	}
-	else if( !strcmp("ycord",key) || !strcmp("yCord",key)   )
+	
+	else if( !strcmp("ycord",key)  )
 	{
 		num_input=atof(value);
 		if(num_input==0.0)//se puede ya que ambos son double
@@ -198,11 +215,12 @@ int get_input_callback(char *key, char *value, void *userData)
 			fprintf(stderr,"Invalid input for ycord not a number or 0.0\n");
 			status=CALLBCK_ERROR;
 		}
-			
 		else
 			((input_data_t *)userData)->drawStart.ycord=num_input;
+		
 	}
-	else if( !strcmp("sides",key) || !strcmp("Sides",key)   )
+	
+	else if( !strcmp("sides",key) )
 	{
 		int side_input=atoi(value);
 		if(!num_input) 
@@ -210,7 +228,6 @@ int get_input_callback(char *key, char *value, void *userData)
 			fprintf(stderr,"Invalid input not a number or 0\n");
 			status=CALLBCK_ERROR;
 		}
-			
 		else
 		{
 			((input_data_t *)userData)->polygonSides=side_input;
@@ -218,12 +235,15 @@ int get_input_callback(char *key, char *value, void *userData)
 			
 		}
 	}
+	
 	else
 	{
 		fprintf(stderr,"Unknown option: '%s %s'\n",key, value);
 		status=CALLBCK_ERROR;
 	}
 	
+	free(key);
+	free(value);
 	return status;
 	
 }

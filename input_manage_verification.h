@@ -37,11 +37,11 @@
     
     enum types_fractales{YE=1,UNIFORME,PITAGORAS};
     
-    #define D_WIDTH	1024
+    #define D_WIDTH		1024
     #define D_HEIGHT	600
     
-    #define IN_USE	1
-    #define NOT_IN_USE 0
+    #define IN_USE		1
+    #define NOT_IN_USE	0
         
     #define YE_RIGHT_ANGLE_MIN	0
     #define YE_RIGHT_ANGLE_MAX	90
@@ -73,7 +73,7 @@
     #define VALID_INPUT 0
 
 
-    int get_input_callback(char *key, char *value, void *userData);
+    int get_input_callback(const char *key_orig, const char *value_orig, void *userData);
     void initialize_input_structure(input_data_t * user_input_data);
     int validate_input(input_data_t * user_input_data);
     void draw_fractal(input_data_t * user_input_data);

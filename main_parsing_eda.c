@@ -48,5 +48,4 @@ int parseCmdLine(int argc, char *argv[], pCallback callback_func, void *userData
 				}
 
 	return cont_opciones_para;
-
 }

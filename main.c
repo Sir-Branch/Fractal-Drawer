@@ -85,7 +85,7 @@ void bancoPruebas(void)
 	char *ye_valido[]={"./program","-type", "YE", "-lStart","100", "-lConstant", "0.60", "-lEnd" ,"4" ,"-rightangle" ,"15" ,"-leftangle", "-15"};
     char *triangulo_valido[]={"./program","-type","PITAGORAS","-lStart","300","-lEnd" ,"10" ,"-rightangle" ,"60" ,"-leftangle", "-60"};
     char *uniforme_valido[]={"./program","-type","UNIFORME","-lStart","100", "-lEnd" ,"10","-lConstant", "0.50","-xcord","300","-ycord","300","-sides","8"};
-    char *type_invalido[]={"./program","-type","LAMACARENA","-lStart","200", "-lEnd" ,"10","-lConstant", "0.50","-xcord","300","-ycord","300","-sides","5"};
+	char *type_invalido[]={"./program","-type","LAMACARENA","-lStart","200", "-lEnd" ,"10","-lConstant", "0.50","-xcord","300","-ycord","300","-sides","5"};
     char *ye_invalido_sides[]={"./program","-type", "YE", "-lStart","10", "-lConstant", "0.70", "-lEnd" ,"4" ,"-rightangle" ,"15" ,"-leftangle", "-15","-sides","5"};
     char *ye_invalido_angulos_invertidos[]={"./program","-type", "YE", "-lStart","10", "-lConstant", "0.70", "-lEnd" ,"4" ,"-rightangle" ,"-15" ,"-leftangle", "15"};
 	char *triangulo_invalido_lconstant[]={"./program","-type","PITAGORAS","-lStart","300", "-lConstant", "0.70","-lEnd" ,"50" ,"-rightangle" ,"60" ,"-leftangle", "-60"};
